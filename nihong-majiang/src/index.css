@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局 CSS 变量 */
+:root {
+  --color-table:        #1B4332;
+  --color-table-light:  #2D6A4F;
+  --color-tile-bg:      #FFF8E7;
+  --color-tile-border:  #D4B896;
+  --color-man:          #C62828;
+  --color-pin:          #1565C0;
+  --color-sou:          #2E7D32;
+  --color-honor:        #4A148C;
+  --color-aka:          #FF1744;
+  --color-gold:         #FFD700;
+  --color-gold-dark:    #F9A825;
+}
+
+/* 基础样式重置 */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans JP', 'Noto Sans SC', 'PingFang SC', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--color-table);
+  color: #F5F5F5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* 禁止文字选中（游戏牌面） */
+  user-select: none;
+}
+
+/* 移动端手牌横向滚动 */
+.hand-scroll {
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.hand-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 牌面立体感增强 */
+.tile-3d {
+  background: linear-gradient(145deg, #fffdf0 0%, #fff8e7 60%, #f5ead4 100%);
+}
+
+/* 横屏提示（手机端） */
+@media screen and (max-width: 640px) and (orientation: portrait) {
+  .landscape-hint {
+    display: flex;
+  }
+}
+@media screen and (min-width: 641px), screen and (orientation: landscape) {
+  .landscape-hint {
+    display: none;
+  }
+}
