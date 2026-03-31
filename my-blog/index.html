@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inkwell — 个人博客</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   '#3B82F6',
+            secondary: '#60A5FA',
+            cta:       '#F97316',
+            surface:   '#F8FAFC',
+            ink:       '#1E293B',
+            border:    '#E2E8F0',
+          },
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans:  ['Roboto', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ── Base ── */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 1200px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      z-index: 100;
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 24px rgba(59,130,246,0.07);
+    }
+    .nav-logo {
+      font-family: 'Newsreader', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1E293B;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: #3B82F6; }
+    .nav-links { display: flex; gap: 8px; align-items: center; }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { background: #EFF6FF; color: #3B82F6; }
+    .nav-cta {
+      background: #3B82F6;
+      color: #fff !important;
+      border-radius: 10px !important;
+      padding: 8px 18px !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: #2563EB !important; color: #fff !important; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 160px 24px 80px;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EFF6FF;
+      color: #3B82F6;
+      border: 1px solid #BFDBFE;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 5px 14px;
+      margin-bottom: 28px;
+    }
+    .hero-badge svg { width: 14px; height: 14px; }
+    .hero h1 {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #0F172A;
+      margin: 0 0 20px;
+    }
+    .hero h1 em { color: #3B82F6; font-style: italic; }
+    .hero p {
+      font-size: 1.1rem;
+      color: #475569;
+      line-height: 1.75;
+      margin: 0 auto 36px;
+      max-width: 520px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #3B82F6; color: #fff;
+      padding: 12px 26px; border-radius: 12px;
+      font-weight: 600; font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover { background: #2563EB; box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: #1E293B;
+      padding: 12px 26px; border-radius: 12px;
+      font-weight: 500; font-size: 0.95rem;
+      text-decoration: none;
+      border: 1.5px solid #E2E8F0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: #3B82F6; background: #EFF6FF; }
+
+    /* ── Section ── */
+    .section { padding: 80px 24px; }
+    .container { max-width: 1160px; margin: 0 auto; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #3B82F6; margin-bottom: 10px;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 2px;
+      background: #3B82F6;
+      border-radius: 2px;
+    }
+    .section-title {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin: 0 0 48px;
+    }
+
+    /* ── Featured Card ── */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+    .card-featured {
+      background: #fff;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-featured:hover {
+      box-shadow: 0 12px 40px rgba(59,130,246,0.12);
+      border-color: #BFDBFE;
+      transform: translateY(-4px);
+    }
+    .card-featured.large { grid-row: span 2; }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .card-featured.large .card-img { aspect-ratio: 4/3; }
+    .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      background: #EFF6FF;
+      color: #3B82F6;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+    .card-title {
+      font-family: 'Newsreader', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #0F172A;
+      line-height: 1.35;
+      margin: 0 0 10px;
+    }
+    .card-featured.large .card-title { font-size: 1.65rem; }
+    .card-excerpt {
+      font-size: 0.9rem;
+      color: #475569;
+      line-height: 1.7;
+      margin: 0 0 20px;
+      flex: 1;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .card-meta-info { display: flex; flex-direction: column; }
+    .meta-author { font-size: 0.82rem; font-weight: 600; color: #1E293B; }
+    .meta-date { font-size: 0.78rem; color: #94A3B8; }
+    .read-more {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.82rem; font-weight: 600;
+      color: #3B82F6; margin-left: auto;
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+    .read-more:hover { gap: 8px; }
+    .read-more svg { width: 14px; height: 14px; }
+
+    /* ── Topics ── */
+    .topics-grid {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .topic-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1E293B;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .topic-chip:hover { border-color: #3B82F6; background: #EFF6FF; color: #3B82F6; }
+    .topic-chip svg { width: 18px; height: 18px; }
+    .topic-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: #94A3B8;
+      background: #F1F5F9;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* ── Recent Posts ── */
+    .posts-list { display: flex; flex-direction: column; gap: 0; }
+    .post-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid #E2E8F0;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .post-item:first-child { padding-top: 0; }
+    .post-item:hover .post-title { color: #3B82F6; }
+    .post-thumb {
+      width: 90px; height: 68px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .post-info { flex: 1; }
+    .post-tag {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #F97316; margin-bottom: 6px;
+    }
+    .post-title {
+      font-family: 'Newsreader', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #0F172A;
+      line-height: 1.4;
+      margin: 0 0 6px;
+      transition: color 0.2s;
+    }
+    .post-date { font-size: 0.78rem; color: #94A3B8; }
+    .post-read-time {
+      font-size: 0.78rem; color: #94A3B8;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .post-read-time svg { width: 13px; height: 13px; }
+
+    /* ── Newsletter ── */
+    .newsletter {
+      background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+      border-radius: 24px;
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+    }
+    @media (max-width: 640px) {
+      .newsletter { padding: 40px 24px; }
+    }
+    .newsletter h2 {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+    .newsletter p { color: rgba(255,255,255,0.8); font-size: 1rem; margin: 0 0 32px; max-width: 440px; }
+    .newsletter-form {
+      display: flex; gap: 10px; width: 100%; max-width: 480px;
+    }
+    @media (max-width: 480px) { .newsletter-form { flex-direction: column; } }
+    .newsletter-form input {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      font-size: 0.95rem;
+      font-family: 'Roboto', sans-serif;
+      outline: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      backdrop-filter: blur(8px);
+    }
+    .newsletter-form input::placeholder { color: rgba(255,255,255,0.55); }
+    .newsletter-form input:focus { background: rgba(255,255,255,0.22); }
+    .newsletter-form button {
+      padding: 12px 24px;
+      background: #F97316;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      font-family: 'Roboto', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .newsletter-form button:hover { background: #EA6C00; }
+    .newsletter-note { margin-top: 14px; font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid #E2E8F0;
+      padding: 48px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .footer-logo {
+      font-family: 'Newsreader', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1E293B;
+      text-decoration: none;
+    }
+    .footer-logo span { color: #3B82F6; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 0.875rem;
+      color: #475569;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #3B82F6; }
+    .footer-copy { font-size: 0.8rem; color: #94A3B8; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid #E2E8F0; margin: 0; }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ NAVBAR ═══════════════ -->
+  <nav class="navbar" role="navigation" aria-label="主导航">
+    <a class="nav-logo" href="#">Ink<span>well</span></a>
+    <div class="nav-links">
+      <a href="#featured">文章</a>
+      <a href="#topics">话题</a>
+      <a href="#newsletter">订阅</a>
+      <a href="#newsletter" class="nav-cta">开始阅读</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <header>
+    <div class="hero">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        每周精选好文
+      </div>
+      [TM_CONTINUE_ACK:tmc-4fhyni][TM_CONTINUE_START:tmc-4fhyni]
+      <h1>思想有光，<em>文字有重量</em></h1>
+      <p>记录技术、设计与生活的思考。每一篇文章都是一次真诚的对话。</p>
+      <div class="hero-actions">
+        <a href="#featured" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          浏览文章
+        </a>
+        <a href="#newsletter" class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          订阅更新
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ FEATURED ARTICLES ═══════════════ -->
+  <section class="section" id="featured">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">精选文章</div>
+        <h2 class="section-title">值得细读的好文</h2>
+      </div>
+      <div class="featured-grid reveal">
+
+        <!-- Large card -->
+        <a class="card-featured large" href="#">
+          <div style="width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#3B82F6 0%,#1D4ED8 60%,#7C3AED 100%);display:flex;align-items:center;justify-content:center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="card-body">
+            <span class="card-tag">设计</span>
+            <h3 class="card-title">从零构建设计系统：一个独立开发者的实战记录</h3>
+            <p class="card-excerpt">设计系统不只是组件库，它是团队语言的统一。本文记录了我在过去六个月中从零搭建一套完整设计系统的全过程，包括踩过的坑和最终的收获。</p>
+            <div class="card-meta">
+              <div class="avatar" style="background:linear-gradient(135deg,#3B82F6,#7C3AED);">李</div>
+              <div class="card-meta-info">
+                <span class="meta-author">李晨风</span>
+                <span class="meta-date">2026年3月10日 · 8 分钟阅读</span>
+              </div>
+              <a href="#" class="read-more">
+                阅读
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </a>
+
+        <!-- Small card 1 -->
+        <a class="card-featured" href="#">
+          <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#F97316 0%,#EF4444 100%);display:flex;align-items:center;justify-content:center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="card-body">
+            <span class="card-tag">开发</span>
+            <h3 class="card-title">我为什么放弃了复杂框架，回到纯 HTML</h3>
+            <p class="card-excerpt">有时候简单才是最优解。这是一篇关于技术选型的反思文章。</p>
+            <div class="card-meta">
+              <div class="avatar" style="background:linear-gradient(135deg,#F97316,#EF4444);">王</div>
+              <div class="card-meta-info">
+                <span class="meta-author">王海洋</span>
+                <span class="meta-date">2026年3月7日 · 5 分钟阅读</span>
+              </div>
+              <a href="#" class="read-more">
+                阅读
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </a>
+
+        <!-- Small card 2 -->
+        <a class="card-featured" href="#">
+          <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#10B981 0%,#3B82F6 100%);display:flex;align-items:center;justify-content:center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="card-body">
+            <span class="card-tag">思考</span>
+            <h3 class="card-title">AI 时代的程序员：我们究竟在失去什么</h3>
+            <p class="card-excerpt">工具越来越强大，但深度思考的能力却在悄悄流失？</p>
+            <div class="card-meta">
+              <div class="avatar" style="background:linear-gradient(135deg,#10B981,#3B82F6);">张</div>
+              <div class="card-meta-info">
+                <span class="meta-author">张晓雨</span>
+                <span class="meta-date">2026年3月5日 · 6 分钟阅读</span>
+              </div>
+              <a href="#" class="read-more">
+                阅读
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ TOPICS ═══════════════ -->
+  <section class="section" id="topics">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">分类话题</div>
+        <h2 class="section-title">找到你感兴趣的方向</h2>
+      </div>
+      <div class="topics-grid reveal">
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          开发技术
+          <span class="topic-count">24</span>
+        </a>
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          设计思维
+          <span class="topic-count">18</span>
+        </a>
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          人工智能
+          <span class="topic-count">15</span>
+        </a>
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          写作创作
+          <span class="topic-count">12</span>
+        </a>
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          产品思考
+          <span class="topic-count">9</span>
+        </a>
+        <a href="#" class="topic-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          生活随笔
+          <span class="topic-count">21</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ RECENT POSTS ═══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">最新发布</div>
+        <h2 class="section-title">近期文章</h2>
+      </div>
+      <div class="posts-list reveal">
+
+        <a class="post-item" href="#">
+          <div style="width:90px;height:68px;border-radius:10px;background:linear-gradient(135deg,#8B5CF6,#3B82F6);flex-shrink:0;"></div>
+          <div class="post-info">
+            <div class="post-tag">效率工具</div>
+            <h3 class="post-title">用 Obsidian 搭建第二大脑：我的知识管理实践</h3>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="post-date">2026年3月12日</span>
+              <span class="post-read-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                7 分钟
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <a class="post-item" href="#">
+          <div style="width:90px;height:68px;border-radius:10px;background:linear-gradient(135deg,#F59E0B,#F97316);flex-shrink:0;"></div>
+          <div class="post-info">
+            <div class="post-tag">开发</div>
+            <h3 class="post-title">Tailwind CSS v4 深度体验：值得升级吗？</h3>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="post-date">2026年3月9日</span>
+              <span class="post-read-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                10 分钟
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <a class="post-item" href="#">
+          <div style="width:90px;height:68px;border-radius:10px;background:linear-gradient(135deg,#EC4899,#8B5CF6);flex-shrink:0;"></div>
+          <div class="post-info">
+            <div class="post-tag">设计</div>
+            <h3 class="post-title">字体排版的 10 条黄金法则，让你的设计瞬间提升档次</h3>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="post-date">2026年3月6日</span>
+              <span class="post-read-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                6 分钟
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <a class="post-item" href="#">
+          <div style="width:90px;height:68px;border-radius:10px;background:linear-gradient(135deg,#10B981,#06B6D4);flex-shrink:0;"></div>
+          <div class="post-info">
+            <div class="post-tag">思考</div>
+            <h3 class="post-title">远程工作两年后，我重新思考「专注」这件事</h3>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="post-date">2026年3月3日</span>
+              <span class="post-read-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                9 分钟
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <a class="post-item" href="#">
+          <div style="width:90px;height:68px;border-radius:10px;background:linear-gradient(135deg,#3B82F6,#10B981);flex-shrink:0;"></div>
+          <div class="post-info">
+            <div class="post-tag">产品</div>
+            <h3 class="post-title">独立开发者的第一个付费产品：从 0 到 100 用户的完整复盘</h3>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="post-date">2026年2月28日</span>
+              <span class="post-read-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                12 分钟
+              </span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ NEWSLETTER ═══════════════ -->
+  <section class="section" id="newsletter">
+    <div class="container">
+      <div class="newsletter reveal">
+        <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h2>每周一封，不多不少</h2>
+        <p>订阅 Inkwell [TM_CONTINUE_ACK:tmc-npg81m][TM_CONTINUE_START:tmc-npg81m]，获取每周精选内容、深度技术文章和设计思考。不打扰，随时可退。</p>
+        <form class="newsletter-form" onsubmit="return false;">
+          <input type="email" placeholder="your@email.com" aria-label="邮箱地址" />
+          <button type="submit">立即订阅</button>
+        </form>
+        <p class="newsletter-note">已有 1,200+ 位读者 · 无垃圾邮件 · 一键退订</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer>
+    <a class="footer-logo" href="#">Ink<span>well</span></a>
+    <nav class="footer-links" aria-label="页脚导航">
+      <a href="#featured">文章</a>
+      <a href="#topics">话题</a>
+      <a href="#newsletter">订阅</a>
+      <a href="#">关于</a>
+    </nav>
+    <span class="footer-copy">© 2026 Inkwell. 用文字记录思考。</span>
+  </footer>
+
+  <!-- ═══════════════ SCROLL REVEAL ═══════════════ -->
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
